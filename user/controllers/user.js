@@ -1,5 +1,5 @@
 require('dotenv').config();
-const userModel = require("./model");
+const User = require("../../models/User");
 const jwt = require('jsonwebtoken');
 
 async function registerloginUser (req, res)  {
@@ -7,9 +7,9 @@ async function registerloginUser (req, res)  {
     const {username,password,firstName,lastName,Phone,Address, Country,City,role} = req.body;
     console.log(req.body);
 
-    const newUser = await userModel.findOne({username});
+    const newUser = await User.findOne({username});
     if(!newUser){
-      const result = await userModel.create({
+      const result = await User.create({
         username,
         password,
         firstName,
@@ -62,11 +62,11 @@ try{
 
    if (firstName) {
     console.log(firstName);
-     user = await userModel.findOne({ firstName });
+     user = await User.findOne({ firstName });
    } else if (lastName) {
-     user = await userModel.findOne({ lastName });
+     user = await User.findOne({ lastName });
    } else if (username) {
-     user = await userModel.findOne({ username });
+     user = await User.findOne({ username });
    }
 
    if (!user) {
@@ -85,11 +85,11 @@ try{
 async function updateUser(req , res){
     try {
 
-      await userModel.findOneAndUpdate({username: req.body.username}, {password:req.body.password},
+      await User.findOneAndUpdate({username: req.body.username}, {password:req.body.password},
         {firstName: req.body.firstName},{lastName:req.body.lastName},{Phone : req.body.Phone},
         {Address: req.body.Address},{role: req.body.role},{Country: req.body.Country},{City: req.body.City});
       
-        const user = await userModel.find({username:req.body.username})
+        const user = await User.find({username:req.body.username})
       res.send(user);
     } catch (error) {
       res.status(500).send(error);
@@ -98,7 +98,7 @@ async function updateUser(req , res){
 
 async function deleteUser (req, res){
     try {
-      const user = await userModel.deleteOne({username: req.body.username});
+      const user = await User.deleteOne({username: req.body.username});
       res.send(user);
       cookies.set('testtoken', {maxAge: 0});
     } catch (error) {
@@ -106,10 +106,9 @@ async function deleteUser (req, res){
     }
 };
 
-
 module.exports = {
     registerloginUser,
     updateUser,
     deleteUser,
-    getUser,
+    getUser
 };
