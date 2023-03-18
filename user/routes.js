@@ -1,6 +1,7 @@
 const express = require("express");
 const userController = require('./controllers/user');
-const productController=require('./controllers/product')
+const productController=require('./controllers/product');
+const orderController=require('./controllers/order');
 const auth = require('../auth/authorization')
 
 const router = express.Router();
@@ -17,6 +18,10 @@ router.patch("/update-product",productController.updateProduct);
 router.delete("/delete-product",productController.deleteProduct);
 router.get("/get-products",productController.getProducts);
 router.get("/get-productbycateg",productController.getByCateg);
+//order routes
+router.post("/create-order",orderController.createOrder);
+
+
 
 
 module.exports = router

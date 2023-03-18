@@ -1,5 +1,6 @@
 require('dotenv').config();
 const User = require("../../models/User");
+const Cart= require("../../models/Cart");
 const jwt = require('jsonwebtoken');
 
 async function registerloginUser (req, res)  {
@@ -19,7 +20,11 @@ async function registerloginUser (req, res)  {
         Country,
         City,
         role
-      })
+      });
+      await Cart.create({
+        products:null,
+        userID:result._id
+      });
 
       const token = jwt.sign({result}, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: "1hr"
