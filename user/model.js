@@ -30,8 +30,14 @@ const orderSchema = new Schema({
   totalAmount: {type: Number,required: true,},
   Comments:{type: String,required: false,},
   paymentType:{type: String,required: true,enum: ['Cash', 'Credit Card']},
-  products: [{type: mongoose.Schema.Types.ObjectId, ref: 'Product',Quantity: {type: String, required: true}}]
+  orderdetailSchema:{type: String,required: true,}
 });
+
+const orderdetailSchema = new Schema({
+  ProductId: {type: ObjectId,required: true},
+  quantity: {type: Number,required: true},
+  unitPrice: {type: Number,required: true},
+})
 
 const shipmentSchema = new Schema({
   shipperName: {type: String, required: true},
@@ -46,6 +52,8 @@ const User = mongoose.model("User", UserSchema);
 const Product = mongoose.model("Product", productSchema);
 const Order = mongoose.model("Order", orderSchema);
 const Shipment = mongoose.model("Shipment", shipmentSchema); 
+const OrderDetail = mongoose.model("OrderDetail", shipmentSchema); 
+
 
 
 
