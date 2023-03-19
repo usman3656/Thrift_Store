@@ -3,10 +3,11 @@ const Cart = require('../../models/Cart');
 const Order = require("../../models/Order");
 const OrderDetail = require('../../models/OrderDetail');
 const Shipment = require('../../models/Shipment');
+const Shipper= require('../../models/Shipper');
 
-const createOrder=async(req,res)=>{
+const createOrder=async (req,res)=>{
     try {
-    const {userID,comments,paymentType,buyerID}=req.body;
+    const {userID,comments,paymentType,buyerID,destAddress}=req.body;
     const cart=await Cart.findOne({userID:userID}) //returns cart of user
 
     if(!cart)
@@ -14,14 +15,12 @@ const createOrder=async(req,res)=>{
         res.send("Error!");
     } else {
 
-        //creates order detail with product ids from cart
-        const orderDetail=await OrderDetail.create([{
-            ProductId:cart.products // idk how to add products separately with quantity
-        }]);
-
+        const shipper=await Shipper.findOne({shipperStatus:'available'});
         //creates shipment 
         const shipment=await Shipment.create([{
-            //shipperName,shipperPhone,sourceAddress,destAddress,shipmentDate,Amount            
+            //shipperID,destAddress   
+            shipperID:shipper._id,
+            destAddress
         }]);
 
         //creates order with total amount from order detail and other info from request
@@ -31,10 +30,16 @@ const createOrder=async(req,res)=>{
             totalAmount:0,
             comments,            
             paymentType,
-            orderdetailID:orderDetail._id,
             buyerID,
             shipmentID:shipment._id
-        }])
+        }]);
+
+        //creates order detail with product ids and quantity from cart
+        const orderDetail=await OrderDetail.create([{
+            ProductId:cart.product ,
+            quantity:cart.quantity,
+            orderID:order._id
+        }]);        
     }
 
     } catch (error) {
@@ -42,6 +47,15 @@ const createOrder=async(req,res)=>{
     }
 };
 
+const updateOrderStatus=async (req,res)=>{
+
+};
+
+const getAllOrders= async (req,res)=>{
+
+};
+
 module.exports = {
-    createOrder
+    createOrder,
+    updateOrderStatus
 };

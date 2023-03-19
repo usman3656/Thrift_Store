@@ -1,7 +1,7 @@
 require('dotenv').config();
 const Product = require("../../models/Product");
 
-const addProduct = async(req,res) =>{
+const addProduct = async (req,res) =>{
     try {
         const {productName,productDescription, productPrice,productImage,productCategory,availableQuantity,sellerID} = req.body;
 
@@ -16,7 +16,7 @@ const addProduct = async(req,res) =>{
     }
 };
 
-const updateProduct = async(req,res) =>{
+const updateProduct = async (req,res) =>{
     try {
         const {productID,productName,productDescription, productPrice,productImage,productCategory,availableQuantity}=req.body;
         const updatedProduct=await Product.findOneAndUpdate({_id:productID},{productName,productDescription,productPrice,productImage,productCategory,availableQuantity});
@@ -26,7 +26,7 @@ const updateProduct = async(req,res) =>{
     }
 };
 
-const deleteProduct= async(req,res) => {
+const deleteProduct= async (req,res) => {
     try {
         const{productID}=req.body;
         const deletedProduct=await Product.deleteOne({_id:productID});
@@ -45,7 +45,7 @@ const getProducts = async (req,res)=>{
     }
 };
 
-const getByCateg =async(req,res)=>{
+const getByCateg =async (req,res)=>{
     try {
         const {productCategory}=req.body;
         const product=await Product.find({productCategory:productCategory});

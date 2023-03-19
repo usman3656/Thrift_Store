@@ -8,7 +8,6 @@ const orderSchema = new Schema({
     totalAmount: {type: Number,required: true},
     Comments:{type: String},
     paymentType:{type: String,required: true,enum: ['Cash', 'Credit Card']},
-    orderdetailID:{type: mongoose.Types.ObjectId,required: true,ref:"OrderDetail"},
     buyerID: {type:mongoose.Types.ObjectId,required:true,ref:"User"},
     shipmentID: {type:mongoose.Types.ObjectId,required:true,ref:"Shipment"}
   });

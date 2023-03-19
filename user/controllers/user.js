@@ -111,6 +111,38 @@ async function deleteUser (req, res){
     }
 };
 
+async function login (req,res){
+  try {
+    const {username,password}=req.body;
+    const user = await User.findOne({username});
+    if(!user){
+      res.send("user does not exist!");
+    } else{
+        const token = jwt.sign({result}, process.env.ACCESS_TOKEN_SECRET, {
+          expiresIn: "1hr"
+        })
+
+        const refToken = jwt.sign({result}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: "8hr"});
+        console.log(token);
+        console.log(refToken);
+        res
+        .cookie("access_token", token, {
+          httpOnly: true,
+        }).cookie("refreshToken", refToken, {
+          httpOnly:true
+        })
+        .status(200)
+        .send({
+          message: "user logged in sucessfully",
+          data: user,
+        });
+    }
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 module.exports = {
     registerloginUser,
     updateUser,
