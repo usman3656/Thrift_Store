@@ -22,11 +22,11 @@ const createOrder=async (req,res)=>{
             shipperID:shipper._id,
             destAddress
         }]);
-
+        const purchaseDate=new Date();
         //creates order with total amount from order detail and other info from request
         const order=await Order.create([{orderDate:new Date(),
             orderStatus:'Pending',
-            deliverydate:{$dateAdd:{startDate: new Date(),unit: "day",amount: 3}},
+            deliveryDate:{$dateAdd:{startDate:purchaseDate,unit: "day",amount: 3}},
             totalAmount:0,
             comments,            
             paymentType,

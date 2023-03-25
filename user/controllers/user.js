@@ -23,7 +23,8 @@ async function registerloginUser (req, res)  {
       });
       await Cart.create({
         products:null,
-        userID:result._id
+        userID:result._id,
+        quantity:0
       });
 
       const token = jwt.sign({result}, process.env.ACCESS_TOKEN_SECRET, {
@@ -57,42 +58,39 @@ async function registerloginUser (req, res)  {
 
  async function getUser (req,res) {
 
-try{
-  console.log("get function")
-  const { username, firstName, lastName } = req.query;
-  console.log(req.params) 
-   console.log("get function")
+    try{
+      console.log("get function")
+      const { username, firstName, lastName } = req.query;
+      console.log(req.params) 
+      console.log("get function")
 
-   let user;
+      let user;
+      if (username) {
+        user = await User.findOne({ username });
+      } else if (lastName) {
+        user = await User.findOne({ lastName });
+      } else if (firstName) {
+        console.log(firstName);
+        user = await User.findOne({ firstName });
+      } 
 
-   if (firstName) {
-    console.log(firstName);
-     user = await User.findOne({ firstName });
-   } else if (lastName) {
-     user = await User.findOne({ lastName });
-   } else if (username) {
-     user = await User.findOne({ username });
-   }
-
-   if (!user) {
-     res.send("Invalid details");
-   } else {
-     res.send({
-       message: "successfully fetched data",
-       data: { user },
-     });
-   }
- } catch (error) {
-   console.log(error);
- }
+      if (!user) {
+        res.send("Invalid details");
+      } else {
+        res.send({
+          message: "successfully fetched data",
+          data: { user },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
 }
 
 async function updateUser(req , res){
     try {
 
-      await User.findOneAndUpdate({username: req.body.username}, {password:req.body.password},
-        {firstName: req.body.firstName},{lastName:req.body.lastName},{Phone : req.body.Phone},
-        {Address: req.body.Address},{role: req.body.role},{Country: req.body.Country},{City: req.body.City});
+      await User.findOneAndUpdate({username: req.body.username}, {password:req.body.password,firstName: req.body.firstName,lastName:req.body.lastName,Phone : req.body.Phone,Address: req.body.Address,role: req.body.role,Country: req.body.Country,City: req.body.City});
       
         const user = await User.find({username:req.body.username})
       res.send(user);
