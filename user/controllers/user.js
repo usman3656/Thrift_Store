@@ -131,7 +131,7 @@ async function login (req,res){
         .status(200)
         .send({
           message: "user logged in sucessfully",
-          data: user,
+          data: user
         });
     
 

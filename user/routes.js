@@ -25,7 +25,7 @@ router.post("/create-order",auth.authenticateToken,orderController.createOrder);
 router.put("/update-order",auth.authenticateToken,orderController.updateOrderStatus);
 router.get("/getall-order",auth.authenticateToken,orderController.getAllOrders);
 //shipper routes
-router.post("/addShipper",auth.authenticateToken,shipperController.addShipper);
+
 
 
 
