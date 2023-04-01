@@ -32,7 +32,7 @@ async function registerloginUser (req, res)  {
       })
 
       const refToken = jwt.sign({result}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: "8hr"});
-      
+
       console.log(token);
       console.log(refToken);
       res
@@ -57,23 +57,17 @@ async function registerloginUser (req, res)  {
     }
   };
 
- async function getUser (req,res) {
+ async function getProfile (req,res) {
 
     try{
       console.log("get function")
-      const { username, firstName, lastName } = req.query;
-      console.log(req.params) 
-      console.log("get function")
+      // console.log(req)
+      const username = req.user.username;
 
       let user;
       if (username) {
         user = await User.findOne({ username });
-      } else if (lastName) {
-        user = await User.findOne({ lastName });
-      } else if (firstName) {
-        console.log(firstName);
-        user = await User.findOne({ firstName });
-      } 
+      }
 
       if (!user) {
         res.send("Invalid details");
@@ -91,9 +85,11 @@ async function registerloginUser (req, res)  {
 async function updateUser(req , res){
     try {
 
-      await User.findOneAndUpdate({username: req.body.username}, {password:req.body.password,firstName: req.body.firstName,lastName:req.body.lastName,Phone : req.body.Phone,Address: req.body.Address,role: req.body.role,Country: req.body.Country,City: req.body.City});
+      const username = req.user.username;
+
+      await User.findOneAndUpdate({username: username}, {password:req.body.password,firstName: req.body.firstName,lastName:req.body.lastName,Phone : req.body.Phone,Address: req.body.Address,role: req.body.role,Country: req.body.Country,City: req.body.City});
       
-        const user = await User.find({username:req.body.username})
+        const user = await User.find({username: username})
       res.send(user);
     } catch (error) {
       res.status(500).send(error);
@@ -143,6 +139,6 @@ async function login (req,res){
 module.exports = {
     registerloginUser,
     updateUser,
-    getUser,
+    getProfile,
     login
 };

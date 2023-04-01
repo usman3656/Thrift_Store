@@ -8,14 +8,19 @@ async function authenticateToken(req, res, next) {
       if (!token) {
         return res.sendStatus(401);
     
-      console.log(req.cookies);
-      console.log('going');
+      // console.log(req.cookies);
+      // console.log('going');
     }else {
-      if (!(await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET))){
+      const data = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+      if (!data){
         return res.sendStatus(401)
       }
       else{
-        next()
+        req.user = data.user
+        console.log(data)
+        console.log(req.user)
+        return next()
+        
       }
     }
   }
