@@ -9,8 +9,7 @@ async function createOrder (req,res){
     try {
     const {userID,comments,paymentType,buyerID,destAddress}=req.body;
     const cart=await Cart.findOne({userID:userID}) //returns cart of user
-
-    if(!cart)
+     if(!cart)
     {
         res.send("Error!");
     } else {

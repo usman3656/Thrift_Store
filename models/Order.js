@@ -10,6 +10,7 @@ const orderSchema = new Schema({
     paymentType:{type: String,required: true,enum: ['Cash', 'Credit Card']},
     buyerID: {type:mongoose.Types.ObjectId,required:true,ref:"User"},
     shipmentID: {type:mongoose.Types.ObjectId,required:true,ref:"Shipment"}
+    
   });
 
 const Order = mongoose.model("Order", orderSchema);
