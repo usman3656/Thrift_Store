@@ -13,7 +13,6 @@ router.post("/login",userController.login);
 
 router.get("/get-user",auth.authenticateToken, userController.getUser);
 router.put("/update_user",auth.authenticateToken, userController.updateUser);
-router.delete("/delete_user",auth.authenticateToken, userController.deleteUser);
 router.post("/refresh-token", auth.resetAccessToken);
 //product routes
 router.post("/add-product",auth.authenticateToken,productController.addProduct);

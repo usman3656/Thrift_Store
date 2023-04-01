@@ -100,16 +100,6 @@ async function updateUser(req , res){
     }
 };
 
-async function deleteUser (req, res){
-    try {
-      const user = await User.deleteOne({username: req.body.username});
-      res.send(user);
-      cookies.set('testtoken', {maxAge: 0});
-    } catch (error) {
-      res.status(500).send(error);
-    }
-};
-
 async function login (req,res){
   try {
     const {username,password}=req.body;
@@ -153,7 +143,6 @@ async function login (req,res){
 module.exports = {
     registerloginUser,
     updateUser,
-    deleteUser,
     getUser,
     login
 };

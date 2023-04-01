@@ -44,7 +44,18 @@ async function getAllUsers (req,res){
   }
 }
 
+async function deleteUser (req, res){
+  try {
+    const user = await User.deleteOne({username: req.body.username});
+    res.send(user);
+    cookies.set('testtoken', {maxAge: 0});
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
 module.exports = {
     getUser,
-    getAllUsers
+    getAllUsers,
+    deleteUser
 }
