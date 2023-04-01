@@ -8,5 +8,6 @@ const auth = require('../auth/authorization')
 const router = express.Router();
 
 router.get("/get-user",auth.authenticateToken, userController.getUser);
+router.get("/getAllUsers",auth.authenticateToken,userController.getAllUsers);
 
 module.exports = router

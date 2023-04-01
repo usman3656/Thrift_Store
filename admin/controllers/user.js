@@ -31,10 +31,20 @@ async function getUser (req,res) {
         });
       }
     } catch (error) {
+      //res.send({message:"User Not found!"});
       console.log(error);
     }
+}
+async function getAllUsers (req,res){
+  try {
+      const users=await User.find();
+      res.send({"message":"Success!",users});
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 module.exports = {
     getUser,
+    getAllUsers
 }
