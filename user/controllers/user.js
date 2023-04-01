@@ -23,7 +23,8 @@ async function registerloginUser (req, res)  {
       });
       await Cart.create({
         products:null,
-        userID:result._id
+        userID:result._id,
+        quantity:0
       });
 
       const token = jwt.sign({result}, process.env.ACCESS_TOKEN_SECRET, {
@@ -57,42 +58,39 @@ async function registerloginUser (req, res)  {
 
  async function getUser (req,res) {
 
-try{
-  console.log("get function")
-  const { username, firstName, lastName } = req.query;
-  console.log(req.params) 
-   console.log("get function")
+    try{
+      console.log("get function")
+      const { username, firstName, lastName } = req.query;
+      console.log(req.params) 
+      console.log("get function")
 
-   let user;
+      let user;
+      if (username) {
+        user = await User.findOne({ username });
+      } else if (lastName) {
+        user = await User.findOne({ lastName });
+      } else if (firstName) {
+        console.log(firstName);
+        user = await User.findOne({ firstName });
+      } 
 
-   if (firstName) {
-    console.log(firstName);
-     user = await User.findOne({ firstName });
-   } else if (lastName) {
-     user = await User.findOne({ lastName });
-   } else if (username) {
-     user = await User.findOne({ username });
-   }
-
-   if (!user) {
-     res.send("Invalid details");
-   } else {
-     res.send({
-       message: "successfully fetched data",
-       data: { user },
-     });
-   }
- } catch (error) {
-   console.log(error);
- }
+      if (!user) {
+        res.send("Invalid details");
+      } else {
+        res.send({
+          message: "successfully fetched data",
+          data: { user },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
 }
 
 async function updateUser(req , res){
     try {
 
-      await User.findOneAndUpdate({username: req.body.username}, {password:req.body.password},
-        {firstName: req.body.firstName},{lastName:req.body.lastName},{Phone : req.body.Phone},
-        {Address: req.body.Address},{role: req.body.role},{Country: req.body.Country},{City: req.body.City});
+      await User.findOneAndUpdate({username: req.body.username}, {password:req.body.password,firstName: req.body.firstName,lastName:req.body.lastName,Phone : req.body.Phone,Address: req.body.Address,role: req.body.role,Country: req.body.Country,City: req.body.City});
       
         const user = await User.find({username:req.body.username})
       res.send(user);
@@ -117,14 +115,22 @@ async function login (req,res){
     const user = await User.findOne({username});
     if(!user){
       res.send("user does not exist!");
-    } else{
-        const token = jwt.sign({result}, process.env.ACCESS_TOKEN_SECRET, {
+    } 
+    //const matchPass=await bcrypt.compare(password,user.password);
+    let matchPass=false;
+    if(password==user.password)
+    {
+      matchPass=true;
+    }
+    if (!matchPass)
+    {
+      res.status(400).json({message:"Incorrect password"});
+    }
+    const token = jwt.sign({user}, process.env.ACCESS_TOKEN_SECRET, {
           expiresIn: "1hr"
         })
 
-        const refToken = jwt.sign({result}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: "8hr"});
-        console.log(token);
-        console.log(refToken);
+        const refToken = jwt.sign({user}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: "8hr"});
         res
         .cookie("access_token", token, {
           httpOnly: true,
@@ -136,7 +142,7 @@ async function login (req,res){
           message: "user logged in sucessfully",
           data: user,
         });
-    }
+    
 
   } catch (error) {
     console.log(error);
@@ -147,5 +153,6 @@ module.exports = {
     registerloginUser,
     updateUser,
     deleteUser,
-    getUser
+    getUser,
+    login
 };
