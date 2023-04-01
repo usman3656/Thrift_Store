@@ -6,7 +6,7 @@ const OrderDetail = require('../../models/OrderDetail');
 const Shipment = require('../../models/Shipment');
 const Shipper= require('../../models/Shipper');
 
-const createOrder=async (req,res)=>{
+async function createOrder (req,res){
     try {
     const {userID,comments,paymentType,destAddress}=req.body;
     const cart=await Cart.findOne({userID:userID}) //returns cart of user
@@ -54,15 +54,54 @@ const createOrder=async (req,res)=>{
     }
 };
 
-const updateOrderStatus=async (req,res)=>{
+async function updateOrderStatus (req,res){
+
+    try {
+        console.log(req.body);
+
+        await Order.findByIdAndUpdate({orderID : req.body.orderID},{orderStatus: req.body.orderStatus});
+        
+        const orderupdate = await User.find({orderID :req.body.orderID});
+
+        if(!orderupdate) {
+            res.send("no order found");
+        } else {
+            res.send(orderupdate)
+        }
+    }
+
+       catch (error) {
+        res.status(400).send(error);
+      }
+
+
 
 };
 
-const getAllOrders= async (req,res)=>{
+async function getAllOrders (req,res){
+    try{
+        
+       
+      const x = await Order.find({});
+         
+         if (!x) {
+           res.send("no order found");
+         } else {
+           res.send({
+             message: "successfully fetched data",
+             data: { x },
+           });
+         }
+       } catch (error) {
+         console.log(error);
+       }
+    }
 
-};
+
+
 
 module.exports = {
     createOrder,
-    updateOrderStatus
+    updateOrderStatus,
+    getAllOrders,
 };

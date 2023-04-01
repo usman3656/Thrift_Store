@@ -22,6 +22,8 @@ router.get("/get-products",productController.getProducts);
 router.get("/get-productbycateg",productController.getByCateg);
 //order routes
 router.post("/create-order",orderController.createOrder);
+router.put("/update-order",orderController.updateOrderStatus);
+router.get("/getall-order",orderController.getAllOrders);
 //shipper routes
 router.post("/addShipper",shipperController.addShipper);
 
