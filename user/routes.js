@@ -9,7 +9,8 @@ const router = express.Router();
 
 //user routes
 router.post("/register-login", userController.registerloginUser);
-router.get("/get-user", userController.getUser);
+router.post("/login",userController.login);
+router.get("/get-user",auth.authenticateToken, userController.getUser);
 router.put("/update_user", userController.updateUser);
 router.delete("/delete_user", userController.deleteUser);
 router.post("/refresh-token", auth.resetAccessToken);
