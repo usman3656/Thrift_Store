@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const Router = require("./user/routes")
+const Routeradmin = require("./admin/routes");
 const bodyParser = require('body-parser');
 const cookieParser = require("cookie-parser");
 const app = express();
@@ -29,6 +30,9 @@ app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use("/user" ,Router);
+app.use("/admin" ,Routeradmin);
+
+
 
 console.log("index.js")
 

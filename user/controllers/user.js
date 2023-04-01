@@ -32,6 +32,7 @@ async function registerloginUser (req, res)  {
       })
 
       const refToken = jwt.sign({result}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: "8hr"});
+      
       console.log(token);
       console.log(refToken);
       res
