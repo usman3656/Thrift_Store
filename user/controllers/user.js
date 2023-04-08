@@ -5,31 +5,23 @@ const jwt = require("jsonwebtoken");
 
 async function registerloginUser(req, res) {
   try {
-    const {
-      username,
-      password,
-      firstName,
-      lastName,
-      Phone,
-      Address,
-      Country,
-      City,
-      role,
-    } = req.body;
+    const data = req.body.data;
     console.log(req.body);
+    console.log(data);
 
-    const newUser = await User.findOne({ username });
+    const newUser = await User.findOne({ username: data.username });
+    console.log(data.username);
     if (!newUser) {
       const result = await User.create({
-        username,
-        password,
-        firstName,
-        lastName,
-        Phone,
-        Address,
-        Country,
-        City,
-        role,
+        username: data.username,
+        password: data.password,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        phone: data.phone,
+        address: data.address,
+        country: data.country,
+        city: data.city,
+        role: data.role,
       });
       await Cart.create({
         products: null,
@@ -37,11 +29,11 @@ async function registerloginUser(req, res) {
         quantity: 0,
       });
 
-      const token = jwt.sign({ result }, process.env.ACCESS_TOKEN_SECRET, {
+      const token = jwt.sign({ data }, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: "1hr",
       });
 
-      const refToken = jwt.sign({ result }, process.env.REFRESH_TOKEN_SECRET, {
+      const refToken = jwt.sign({ data }, process.env.REFRESH_TOKEN_SECRET, {
         expiresIn: "8hr",
       });
 
@@ -57,13 +49,16 @@ async function registerloginUser(req, res) {
         .status(200)
         .send({
           message: "user created successfully",
-          data: result,
+          data: data,
+          token,
+          refToken,
         });
     } else {
-      res.send("user exists");
+      res.status(401).send("user exists");
     }
   } catch (error) {
     console.log(error);
+    res.status(400).send(error.message);
   }
 }
 
@@ -101,11 +96,11 @@ async function updateUser(req, res) {
         password: req.body.password,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        Phone: req.body.Phone,
-        Address: req.body.Address,
+        phone: req.body.phone,
+        address: req.body.address,
         role: req.body.role,
-        Country: req.body.Country,
-        City: req.body.City,
+        country: req.body.country,
+        city: req.body.city,
       }
     );
 
@@ -124,7 +119,7 @@ async function login(req, res) {
     const user = await User.findOne({ username });
 
     if (!user) {
-      res.status(401).send("user does not exist!");
+      res.status(400).send("user does not exist!");
       console.log("user does not exist");
     } else {
       console.log(user);
