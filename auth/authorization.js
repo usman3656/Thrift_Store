@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 
 async function authenticateToken(req, res, next) {
   try {
-    const token = req.cookies.access_token;
+    const token = req.localStorage.getItem("token");
     if (!token) {
       return res.sendStatus(401);
 
@@ -14,7 +14,7 @@ async function authenticateToken(req, res, next) {
       if (!data) {
         return res.sendStatus(401);
       } else {
-        req.user = data.user;
+        // req.user = data.user;
         console.log(data);
         console.log(req.user);
         return next();
@@ -35,29 +35,18 @@ async function resetAccessToken(req, res) {
     if (!refreshToken) {
       res.send("Invalid Refresh token or Token expired");
     }
-    const verifyToken = await jwt.verify(
-      refreshToken,
-      process.env.REFRESH_TOKEN_SECRET
-    );
+    const verifyToken = await jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     if (!verifyToken) {
       res.send("Token donot match");
     }
 
     if (user) {
-      const accessToken = await jwt.sign(
-        { user },
-        process.env.ACCESS_TOKEN_SECRET,
-        {
-          expiresIn: "1hr",
-        }
-      );
-      const refToken = await jwt.sign(
-        { user },
-        process.env.REFRESH_TOKEN_SECRET,
-        {
-          expiresIn: "30days",
-        }
-      );
+      const accessToken = await jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: "1hr",
+      });
+      const refToken = await jwt.sign({ user }, process.env.REFRESH_TOKEN_SECRET, {
+        expiresIn: "30days",
+      });
 
       res
         .cookie("access_token", accessToken, {

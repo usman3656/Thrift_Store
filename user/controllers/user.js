@@ -4,13 +4,13 @@ const Cart = require("../../models/Cart");
 const jwt = require("jsonwebtoken");
 const sgMail = require("@sendgrid/mail");
 let emailauth;
-sgMail.setApiKey("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");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-function getRandomIntInclusive(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
-}
+// function getRandomIntInclusive(min, max) {
+//   min = Math.ceil(min);
+//   max = Math.floor(max);
+//   return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
+// }
 
 async function forgotPassword(req, res) {
   try {
@@ -18,6 +18,7 @@ async function forgotPassword(req, res) {
     console.log("we are in forgot password");
     const data = req.body.data;
     console.log(req.body.data);
+    const token = req.body.token;
     const user = await User.findOne({ username: data.username });
 
     if (!user) {
@@ -28,9 +29,9 @@ async function forgotPassword(req, res) {
 
       const email = data.username;
 
-      // const accountSid = "ACa71e048d3f77184c0678374692a9b635";
-      // const authToken = "eb55c7ebe37b0343dfffa21619bf3465";
-      // const verifySid = "VA2d9aaabd06f195e7e93c4c8fde79d195";
+      // const accountSid = process.env.accountSid;
+      // const authToken = process.env.accountToken;
+      // const verifySid = process.env.verifySid;;
 
       // const twilioClient = require("twilio")(accountSid, authToken);
 
@@ -46,9 +47,9 @@ async function forgotPassword(req, res) {
       //     console.log(verification.toJSON(verification));
       //   });
 
-      emailauth.urlElement = getRandomIntInclusive(1000, 10000000).toString(10);
-      emailauth.emaily = email;
-      console.log(emailauth);
+      // emailauth.urlElement = getRandomIntInclusive(1000, 10000000).toString(10);
+      // emailauth.emaily = email;
+      // console.log(emailauth);
 
       const msg = {
         to: email, // Change to your recipient
@@ -56,8 +57,9 @@ async function forgotPassword(req, res) {
         subject: "Sending with SendGrid is Fun",
         template_id: "d-c6c30ef7ea2349f185df5cd89151ecbd",
         dynamic_template_data: {
-          email: email,
-          code: emailauth.urlElement,
+          token: token,
+          // email: email,
+          // code: emailauth.urlElement,
         },
       };
       sgMail
@@ -83,10 +85,10 @@ async function verifyPassword(req, res) {
   try {
     console.log("we are in verify password");
     const data = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     console.log(data);
     // const emailauth = req.cookie.emailauth;
-    console.log(emailauth);
+    // console.log(emailauth);
 
     if (data.urlElement === emailauth.urlElement && data.emaily === emailauth.emaily) {
       res.status(200).send(data.emaily);
@@ -101,9 +103,9 @@ async function verifyPassword(req, res) {
 // Download the helper library from https://www.twilio.com/docs/node/install
 // Find your Account SID and Auth Token at twilio.com/console
 // and set the environment variables. See http://twil.io/secure
-// const accountSid = "ACa71e048d3f77184c0678374692a9b635";
-// const authToken = "eb55c7ebe37b0343dfffa21619bf3465";
-// const verifySid = "VA2d9aaabd06f195e7e93c4c8fde79d195";
+// const accountSid = process.env.accountSid;
+// const authToken = process.env.accountToken;
+// const verifySid = process.env.verifySid;;
 
 // const client = require("twilio")(accountSid, authToken);
 
@@ -123,9 +125,9 @@ async function verifyPassword(req, res) {
 
 //   const email = data.username;
 
-//   const accountSid = "ACa71e048d3f77184c0678374692a9b635";
-//   const authToken = "eb55c7ebe37b0343dfffa21619bf3465";
-//   const verifySid = "VA2d9aaabd06f195e7e93c4c8fde79d195";
+// const accountSid = process.env.accountSid;
+// const authToken = process.env.accountToken;
+// const verifySid = process.env.verifySid;;
 
 //   const twilioClient = require("twilio")(accountSid, authToken);
 
