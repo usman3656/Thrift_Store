@@ -11,6 +11,7 @@
   "author": "usman boss",
   "license": "ISC",
   "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
     "bcryptjs": "^2.4.3",
     "body": "^5.1.0",
     "cookie-parser": "^1.4.6",
@@ -20,7 +21,8 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.9.1",
     "parser": "^0.1.4",
-    "save": "^2.9.0"
+    "save": "^2.9.0",
+    "twilio": "^4.10.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"

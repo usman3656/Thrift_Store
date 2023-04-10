@@ -2,6 +2,160 @@ require("dotenv").config();
 const User = require("../../models/User");
 const Cart = require("../../models/Cart");
 const jwt = require("jsonwebtoken");
+const sgMail = require("@sendgrid/mail");
+let emailauth;
+sgMail.setApiKey("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");
+
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
+}
+
+async function forgotPassword(req, res) {
+  try {
+    emailauth = { emaily: "", urlElement: "" };
+    console.log("we are in forgot password");
+    const data = req.body.data;
+    console.log(req.body.data);
+    const user = await User.findOne({ username: data.username });
+
+    if (!user) {
+      res.status(400).send("user does not exist!");
+      console.log("user does not exist");
+    } else {
+      console.log(user);
+
+      const email = data.username;
+
+      // const accountSid = "ACa71e048d3f77184c0678374692a9b635";
+      // const authToken = "eb55c7ebe37b0343dfffa21619bf3465";
+      // const verifySid = "VA2d9aaabd06f195e7e93c4c8fde79d195";
+
+      // const twilioClient = require("twilio")(accountSid, authToken);
+
+      // twilioClient.verify.v2
+      //   .services(verifySid) //Put the Verification service SID here
+      //   .update({ customCodeEnabled: true });
+
+      // twilioClient.verify.v2
+      //   .services(verifySid)
+      //   .verifications.create({ customCode: "123456", to: email, channel: "email", sendDigits: "13243" })
+      //   .then((verification) => {
+      //     console.log(verification.sid);
+      //     console.log(verification.toJSON(verification));
+      //   });
+
+      emailauth.urlElement = getRandomIntInclusive(1000, 10000000).toString(10);
+      emailauth.emaily = email;
+      console.log(emailauth);
+
+      const msg = {
+        to: email, // Change to your recipient
+        from: "usman120ghani@gmail.com", // Change to your verified sender
+        subject: "Sending with SendGrid is Fun",
+        template_id: "d-c6c30ef7ea2349f185df5cd89151ecbd",
+        dynamic_template_data: {
+          email: email,
+          code: emailauth.urlElement,
+        },
+      };
+      sgMail
+        .send(msg)
+        .then(() => {
+          console.log("Email sent");
+          res
+            // .cookie("emailauth", emailauth)
+            .status(200)
+            .send("email sent");
+        })
+        .catch((error) => {
+          console.log(error);
+          res.status(401).send(error);
+        });
+    }
+  } catch (error) {
+    console.log(error, "Error Occured");
+    res.status(400).send(error);
+  }
+}
+async function verifyPassword(req, res) {
+  try {
+    console.log("we are in verify password");
+    const data = req.body;
+    console.log(req.body);
+    console.log(data);
+    // const emailauth = req.cookie.emailauth;
+    console.log(emailauth);
+
+    if (data.urlElement === emailauth.urlElement && data.emaily === emailauth.emaily) {
+      res.status(200).send(data.emaily);
+    } else {
+      res.status(403).send("unauthorized");
+    }
+  } catch (err) {
+    res.status(400).send(err);
+  }
+}
+
+// Download the helper library from https://www.twilio.com/docs/node/install
+// Find your Account SID and Auth Token at twilio.com/console
+// and set the environment variables. See http://twil.io/secure
+// const accountSid = "ACa71e048d3f77184c0678374692a9b635";
+// const authToken = "eb55c7ebe37b0343dfffa21619bf3465";
+// const verifySid = "VA2d9aaabd06f195e7e93c4c8fde79d195";
+
+// const client = require("twilio")(accountSid, authToken);
+
+// client.verify.v2
+//   .services(verifySid)
+//   .fetch()
+//   // .verifications.update({ status: "approved" })
+//   .then((verification) => console.log(verification.status));
+
+// const user = await User.findOne({ username: data.username });
+
+// if (!user) {
+//   res.status(400).send("user does not exist!");
+//   console.log("user does not exist");
+// } else {
+//   console.log(user);
+
+//   const email = data.username;
+
+//   const accountSid = "ACa71e048d3f77184c0678374692a9b635";
+//   const authToken = "eb55c7ebe37b0343dfffa21619bf3465";
+//   const verifySid = "VA2d9aaabd06f195e7e93c4c8fde79d195";
+
+//   const twilioClient = require("twilio")(accountSid, authToken);
+
+//   twilioClient.verify.v2
+//     .services(verifySid) //Put the Verification service SID here
+//     .verifications.create({ to: email, channel: "email" })
+//     .then((verification) => {
+//       console.log(verification.sid);
+//       console.log(verification.toJSON(verification));
+//     });
+
+//   res.status(200).send("email sent successfully");
+
+// const msg = {
+//   to: email, // Change to your recipient
+//   from: "usman120ghani@gmail.com", // Change to your verified sender
+//   subject: "Sending with SendGrid is Fun",
+//   text: "and easy to do anywhere, even with Node.js",
+//   html: "<html><p>iuefgquefb</p></html>",
+// };
+// sgMail
+//   .send(msg)
+//   .then(() => {
+//     console.log("Email sent");
+//     res.status(200).send("email sent");
+//   })
+//   .catch((error) => {
+//     console.error(error);
+//     res.status(401).send(error);
+//   });
 
 async function registerloginUser(req, res) {
   try {
@@ -87,22 +241,33 @@ async function getProfile(req, res) {
 }
 
 async function updateUser(req, res) {
+  console.log("we are updating user");
   try {
-    const username = req.user.username;
+    console.log(req.body);
+    // const username = req.user.username;
+
+    // console.log(username);
+
+    const username = req.body.emaily;
+    const password = req.body.password.password;
+
+    console.log(username, password);
 
     await User.findOneAndUpdate(
       { username: username },
       {
-        password: req.body.password,
+        password: password,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         phone: req.body.phone,
         address: req.body.address,
-        role: req.body.role,
+        // role: req.body.role,
         country: req.body.country,
         city: req.body.city,
       }
     );
+
+    console.log("updated");
 
     const user = await User.find({ username: username });
     res.send(user);
@@ -163,4 +328,6 @@ module.exports = {
   updateUser,
   getProfile,
   login,
+  forgotPassword,
+  verifyPassword,
 };

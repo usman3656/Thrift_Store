@@ -10,9 +10,11 @@ const router = express.Router();
 //user routes
 router.post("/register-login", userController.registerloginUser);
 router.post("/login", userController.login);
+router.post("/forgot", userController.forgotPassword);
+router.post("/forgot/verify", userController.verifyPassword);
 
 router.get("/get-profile", auth.authenticateToken, userController.getProfile);
-router.put("/update_user", auth.authenticateToken, userController.updateUser);
+router.put("/update_user", userController.updateUser);
 router.post("/refresh-token", auth.resetAccessToken);
 //product routes
 router.post("/add-product", auth.authenticateToken, productController.addProduct);
