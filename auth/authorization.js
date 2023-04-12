@@ -3,20 +3,18 @@ const jwt = require("jsonwebtoken");
 
 async function authenticateToken(req, res, next) {
   try {
-    const token = req.localStorage.getItem("token");
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    console.log(token);
+
     if (!token) {
       return res.sendStatus(401);
-
-      // console.log(req.cookies);
-      // console.log('going');
     } else {
-      const data = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      const data = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
       if (!data) {
         return res.sendStatus(401);
       } else {
-        // req.user = data.user;
         console.log(data);
-        console.log(req.user);
         return next();
       }
     }
@@ -26,10 +24,12 @@ async function authenticateToken(req, res, next) {
   }
 }
 
+async function refreshToken(req, res) {}
+
 async function resetAccessToken(req, res) {
   try {
     // console.log(req.cookies);
-    const { refreshToken } = req.cookies;
+    // const { refreshToken } = req.cookies;
     // console.log(refreshToken);
 
     if (!refreshToken) {
@@ -49,12 +49,12 @@ async function resetAccessToken(req, res) {
       });
 
       res
-        .cookie("access_token", accessToken, {
-          httpOnly: true,
-        })
-        .cookie("refreshToken", refToken, {
-          httpOnly: true,
-        })
+        // .cookie("access_token", accessToken, {
+        //   httpOnly: true,
+        // })
+        // .cookie("refreshToken", refToken, {
+        //   httpOnly: true,
+        // })
         .status(200)
         .send("Access token updated succesfully");
     }
