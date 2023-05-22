@@ -1,6 +1,6 @@
 require("dotenv").config();
 const User = require("../../models/User");
-const Cart = require("../../models/Cart");
+// const Cart = require("../../models/Cart");
 const jwt = require("jsonwebtoken");
 const sgMail = require("@sendgrid/mail");
 let emailauth;
@@ -161,8 +161,8 @@ async function verifyPassword(req, res) {
 
 async function registerloginUser(req, res) {
   try {
-    const data = req.body.data;
-    console.log(req.body);
+    const data = req.body;
+    // console.log(req.body);
     console.log(data);
 
     const newUser = await User.findOne({ username: data.username });
@@ -178,12 +178,7 @@ async function registerloginUser(req, res) {
         country: data.country,
         city: data.city,
         role: data.role,
-      });
-      await Cart.create({
-        products: null,
-        userID: result._id,
-        quantity: 0,
-      });
+      });     
 
       const token = jwt.sign({ data }, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: "1hr",
@@ -196,16 +191,16 @@ async function registerloginUser(req, res) {
       console.log(token);
       console.log(refToken);
       res
-        .cookie("access_token", token, {
-          httpOnly: true,
-        })
-        .cookie("refreshToken", refToken, {
-          httpOnly: true,
-        })
+        // .cookie("access_token", token, {
+        //   httpOnly: true,
+        // })
+        // .cookie("refreshToken", refToken, {
+        //   httpOnly: true,
+        // })
         .status(200)
         .send({
           message: "user created successfully",
-          data: data,
+          user: result,
           token,
           refToken,
         });

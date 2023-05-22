@@ -1,16 +1,12 @@
 require('dotenv').config();
 const Product = require("../../models/Product");
 
-const addProduct = async (req,res) =>{
-    try {
-        const {productName,productDescription, productPrice,productImage,productCategory,availableQuantity,sellerID} = req.body;
+const addProduct = async (req,res,next) =>{
+    try {        
+    const product=await Product.create(req.body);
 
-    const product=await Product.create([
-        {productName,productDescription, productPrice,productImage,productCategory,availableQuantity,sellerID}
-    ]);
-
-    res.status(200).send({"message":"product added!",product});
-
+    res.status(200).send({"message":"product added!",success:true,product});
+    
     } catch (error) {
         console.log(error)
     }

@@ -5,10 +5,18 @@ const productSchema = new Schema({
     productName:{type: String,required: true},
     productDescription:{type: String,required: true},
     productPrice:{type: Number,required: true},
-    productImage:{type: [String]},
+    productImage:[{type: String,required:true}],
     productCategory:{type: String,required: true,enum: ['Clothes', 'Shoes', 'Accessories','Electronics']},
-    availableQuantity:{type: Number,required: true},
-    sellerID: {type: mongoose.Types.ObjectId,required:true,ref:"User"}
+    availableQuantity:{type: Number,required: true,default:1},
+    sellerID: {type: mongoose.Types.ObjectId,required:true,ref:"User"},
+    createdAt:{type:Date, default:Date.now},
+    numOfReviews:{type:Number,default:0},
+    reviews:[
+      { user:{type: mongoose.Schema.ObjectId, ref: "User", required: true},
+        name:{type:String,required:true},
+        rating:{type:Number,required:true},
+        comment:{type:String, required:true}
+    }]
   });
   
 

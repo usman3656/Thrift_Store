@@ -3,13 +3,16 @@ const jwt = require("jsonwebtoken");
 
 async function authenticateToken(req, res, next) {
   try {
-    const token = req.localStorage.getItem("token");
+    // const token = req.localStorage.getItem("token");
+    var token =req.headers.Authorization;
     if (!token) {
       return res.sendStatus(401);
 
       // console.log(req.cookies);
       // console.log('going');
     } else {
+      token =token.split(" ")[1];
+      console.log(token);
       const data = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
       if (!data) {
         return res.sendStatus(401);
@@ -28,9 +31,7 @@ async function authenticateToken(req, res, next) {
 
 async function resetAccessToken(req, res) {
   try {
-    // console.log(req.cookies);
     const { refreshToken } = req.cookies;
-    // console.log(refreshToken);
 
     if (!refreshToken) {
       res.send("Invalid Refresh token or Token expired");

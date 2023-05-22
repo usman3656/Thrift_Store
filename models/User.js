@@ -10,7 +10,7 @@ const userSchema = new Schema({
   address: { type: String },
   country: { type: String },
   city: { type: String },
-  role: { type: String, required: true, enum: ["Seller", "Buyer"] },
+  role: { type: String, required: true, enum: ["User","Admin"] },
 });
 
 const User = mongoose.model("User", userSchema);

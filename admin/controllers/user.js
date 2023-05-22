@@ -1,6 +1,6 @@
 require("dotenv").config();
 const User = require("../../models/User");
-const Cart = require("../../models/Cart");
+// const Cart = require("../../models/Cart");
 const jwt = require("jsonwebtoken");
 
 async function getUser(req, res) {

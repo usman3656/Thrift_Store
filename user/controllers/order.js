@@ -1,9 +1,9 @@
 require("dotenv").config();
 const { default: mongoose } = require("mongoose");
-const Cart = require("../../models/Cart");
+// const Cart = require("../../models/Cart");
 const Order = require("../../models/Order");
-const OrderDetail = require("../../models/OrderDetail");
-const Shipment = require("../../models/Shipment");
+// const OrderDetail = require("../../models/OrderDetail");
+// const Shipment = require("../../models/Shipment");
 const Shipper = require("../../models/Shipper");
 
 async function createOrder(req, res) {
