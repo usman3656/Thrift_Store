@@ -7,7 +7,6 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const app = express();
 const corsOptions = require("./config/corsOptions");
-const credentials = require("./auth/credentials");
 require("dotenv").config();
 const PORT = process.env.PORT;
 
@@ -15,8 +14,6 @@ const PORT = process.env.PORT;
 const url = `mongodb+srv://nawal:nawal123@cluster0.u26mkpt.mongodb.net/?retryWrites=true&w=majority`;
 
 app.use(cors(corsOptions));
-app.use(credentials);
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
