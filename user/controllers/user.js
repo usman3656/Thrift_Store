@@ -1,6 +1,5 @@
 require("dotenv").config();
 const User = require("../../models/User");
-// const Cart = require("../../models/Cart");
 const jwt = require("jsonwebtoken");
 const sgMail = require("@sendgrid/mail");
 
@@ -71,11 +70,8 @@ async function verifyPassword(req, res) {
     } catch (err) {
       console.error(err);
     }
-    // if (user.user.username === tok.payload.user.username)
     {
       res.status(200).send(user.user.username);
-      // } else {
-      // res.status(403).send("unauthorized");
     }
   } catch (err) {
     res.status(400).send(err);

@@ -17,7 +17,7 @@ router.get("/get-profile", auth.authenticateToken, userController.getProfile);
 router.put("/update_user", userController.updateUser);
 router.post("/refresh-token", auth.resetAccessToken);
 //product routes
-router.post("/add-product", auth.authenticateToken, productController.addProduct);
+router.post("/add-product", productController.addProduct); //authentication needs to be added [removed for testing purposes]
 router.patch("/update-product", auth.authenticateToken, productController.updateProduct);
 router.delete("/delete-product", auth.authenticateToken, productController.deleteProduct);
 router.get("/get-products", auth.authenticateToken, productController.getProducts);
