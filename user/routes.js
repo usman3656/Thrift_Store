@@ -20,8 +20,9 @@ router.post("/refresh-token", auth.resetAccessToken);
 router.post("/add-product", productController.addProduct); //authentication needs to be added [removed for testing purposes]
 router.patch("/update-product", auth.authenticateToken, productController.updateProduct);
 router.delete("/delete-product", auth.authenticateToken, productController.deleteProduct);
-router.get("/get-products", auth.authenticateToken, productController.getProducts);
-router.get("/get-productbycateg", auth.authenticateToken, productController.getByCateg);
+router.get("/get-products", productController.getProducts);
+router.get("/get-products/:id",productController.getProductById);
+router.get("/get-productbycateg/:productCategory", productController.getByCateg);
 //order routes
 router.post("/create-order", auth.authenticateToken, orderController.createOrder);
 router.put("/update-order", auth.authenticateToken, orderController.updateOrderStatus);

@@ -6,7 +6,7 @@ const productSchema = new Schema({
     productDescription:{type: String,required: true},
     productPrice:{type: Number,required: true},
     productImage:[{type: String,required:true}],
-    productCategory:{type: String,required: true,enum: ['Clothes', 'Shoes', 'Accessories','Electronics']},
+    productCategory:{type: String,required: true,enum: ['Clothing', 'Motors', 'Accessories','Electronics']},
     availableQuantity:{type: Number,required: true,default:1},
     sellerID: {type: mongoose.Types.ObjectId,required:true,ref:"User"},
     createdAt:{type:Date, default:Date.now},
