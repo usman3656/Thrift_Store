@@ -23,6 +23,7 @@ router.delete("/delete-product", auth.authenticateToken, productController.delet
 router.get("/get-products", productController.getProducts);
 router.get("/get-products/:id",productController.getProductById);
 router.get("/get-productbycateg/:productCategory", productController.getByCateg);
+router.get("/get-productbyseller/:sellerID",productController.getBySellerID);
 //order routes
 router.post("/create-order", auth.authenticateToken, orderController.createOrder);
 router.put("/update-order", auth.authenticateToken, orderController.updateOrderStatus);

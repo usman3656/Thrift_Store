@@ -72,11 +72,27 @@ const getByCateg =async (req,res)=>{
     }
 };
 
+const getBySellerID=async(req,res)=>{
+    try{
+        const {sellerID}=req.params;
+        const product=await Product.find({sellerID:sellerID});
+        if(!product){
+            res.send("No product has been added to sale by this user.");
+        }
+        else{
+            res.status(200).send({"message":"Successfuly fetched!",product});
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     addProduct,
     updateProduct,
     deleteProduct,
     getProducts,
     getByCateg,
-    getProductById
+    getProductById,
+    getBySellerID
 };
