@@ -12,9 +12,10 @@ router.post("/register-login", userController.registerloginUser);
 router.post("/login", userController.login);
 router.post("/forgot", userController.forgotPassword);
 router.post("/forgot/verify", userController.verifyPassword);
-
+router.get("/getProfile/:id",userController.getByID); //requires authentication
 router.get("/get-profile", auth.authenticateToken, userController.getProfile);
 router.put("/update_user", userController.updateUser);
+router.patch("/update-user-profile",userController.updateUserProfile)
 router.post("/refresh-token", auth.resetAccessToken);
 //product routes
 router.post("/add-product", productController.addProduct); //authentication needs to be added [removed for testing purposes]

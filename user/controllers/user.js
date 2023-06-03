@@ -146,6 +146,22 @@ async function getProfile(req, res) {
   }
 }
 
+async function getByID(req,res){
+  try {
+    const userId = req.params.id;
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      return res.status(404).send({ message: 'User not found' });
+    }
+    
+    res.send({ message: 'Success!', user });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: 'Internal Server Error' });
+  }
+}
+
 async function updateUser(req, res) {
   console.log("we are updating user");
   try {
@@ -175,6 +191,16 @@ async function updateUser(req, res) {
   } catch (error) {
     res.status(500).send(error);
   }
+}
+
+async function updateUserProfile(req,res){
+  try {
+    const {userID,username,firstName, lastName,phone,address,country,city}=req.body;
+    const updatedUser=await User.findOneAndUpdate({_id:userID},{username,firstName, lastName,phone,address,country,city});
+    res.send({"message":"update successful",updatedUser});
+} catch (error) {
+    console.log(error)
+}
 }
 
 async function login(req, res) {
@@ -223,4 +249,6 @@ module.exports = {
   login,
   forgotPassword,
   verifyPassword,
+  getByID,
+  updateUserProfile
 };
