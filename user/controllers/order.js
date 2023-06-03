@@ -1,57 +1,55 @@
 require("dotenv").config();
 const { default: mongoose } = require("mongoose");
-// const Cart = require("../../models/Cart");
 const Order = require("../../models/Order");
-// const OrderDetail = require("../../models/OrderDetail");
-// const Shipment = require("../../models/Shipment");
 const Shipper = require("../../models/Shipper");
 
 async function createOrder(req, res) {
   try {
-    const { userID, comments, paymentType, destAddress } = req.body;
-    const cart = await Cart.findOne({ userID: userID }); //returns cart of user
-    if (!cart) {
-      res.send("Error!");
-    } else {
-      const shipper = await Shipper.findOne({ shipperStatus: "available" });
-      //console.log(shipper._id);
-      //creates shipment
-      //const id=mongoose.Types.ObjectId();
-      const shipment = await Shipment.create([
-        {
-          //shipperID,destAddress
-          //_id:id,
-          shipperID: shipper._id,
-          destAddress,
-        },
-      ]);
-      //const id=shipment._id;
-      console.log(id);
-      const purchaseDate = new Date();
-      purchaseDate.setDate(purchaseDate.getDate() + 3);
-      //creates order with total amount from order detail and other info from request
-      const order = await Order.create([
-        {
-          orderDate: new Date(),
-          orderStatus: "Pending",
-          deliveryDate: purchaseDate,
-          totalAmount: 0,
-          comments,
-          paymentType,
-          buyerID: userID,
-          shipmentID: shipment._id,
-        },
-      ]);
 
-      //creates order detail with product ids and quantity from cart
-      const orderDetail = await OrderDetail.create([
-        {
-          ProductId: cart.product,
-          quantity: cart.quantity,
-          orderID: order._id,
-        },
-      ]);
+    // Get the data from req.body
+    const {
+      Address,
+      orderItems,
+      itemsPrice,
+      totalAmount,
+      Comments,
+      user,
+      paymentType,
+    } = req.body;
+
+    // Find an available shipper
+    const availableShipper = await Shipper.findOne({ shipperStatus: 'available' });
+
+    if (!availableShipper) {
+      return res.status(400).json({ message: 'No available shippers found' });
     }
+
+    // Create a new order
+    const newOrder = new Order({
+      orderDate: Date.now(),
+      orderStatus: 'Pending',
+      deliveryDate: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000),
+      Address,
+      orderItems,
+      itemsPrice,
+      deliveryPrice: 300,
+      totalAmount,
+      Comments,
+      user,
+      shipperID: availableShipper._id,
+      paymentType,
+      paymentStatus: 'Pending',
+    });
+
+    // Save the order
+    const savedOrder = await newOrder.save();
+
+    // Update the shipper's status to 'booked'
+    availableShipper.shipperStatus = 'booked';
+    await availableShipper.save();
+
+    res.status(201).json({ message: 'Order created successfully', order: savedOrder });
+
   } catch (error) {
     console.log(error);
   }
@@ -92,6 +90,7 @@ async function getAllOrders(req, res) {
     }
   } catch (error) {
     console.log(error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 }
 

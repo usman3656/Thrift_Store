@@ -26,7 +26,7 @@ router.get("/get-products/:id",productController.getProductById);
 router.get("/get-productbycateg/:productCategory", productController.getByCateg);
 router.get("/get-productbyseller/:sellerID",productController.getBySellerID);
 //order routes
-router.post("/create-order", auth.authenticateToken, orderController.createOrder);
+router.post("/create-order", orderController.createOrder); //authorization required
 router.put("/update-order", auth.authenticateToken, orderController.updateOrderStatus);
 router.get("/getall-order", auth.authenticateToken, orderController.getAllOrders);
 //shipper routes
