@@ -19,7 +19,7 @@ router.patch("/update-user-profile",userController.updateUserProfile)
 router.post("/refresh-token", auth.resetAccessToken);
 //product routes
 router.post("/add-product", productController.addProduct); //authentication needs to be added [removed for testing purposes]
-router.patch("/update-product", auth.authenticateToken, productController.updateProduct);
+router.patch("/update-product", productController.updateProduct);
 router.delete("/delete-product", auth.authenticateToken, productController.deleteProduct);
 router.get("/get-products", productController.getProducts);
 router.get("/get-products/:id",productController.getProductById);
@@ -27,8 +27,6 @@ router.get("/get-productbycateg/:productCategory", productController.getByCateg)
 router.get("/get-productbyseller/:sellerID",productController.getBySellerID);
 //order routes
 router.post("/create-order", orderController.createOrder); //authorization required
-router.put("/update-order", auth.authenticateToken, orderController.updateOrderStatus);
-router.get("/getall-order", auth.authenticateToken, orderController.getAllOrders);
-//shipper routes
+router.get("/get-order-status/:status/:id",orderController.getOrderByStatus);
 
 module.exports = router;

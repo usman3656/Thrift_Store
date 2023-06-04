@@ -1,12 +1,9 @@
 require("dotenv").config();
-const { default: mongoose } = require("mongoose");
 const Order = require("../../models/Order");
 const Shipper = require("../../models/Shipper");
 
 async function createOrder(req, res) {
   try {
-
-    // Get the data from req.body
     const {
       Address,
       orderItems,
@@ -17,14 +14,12 @@ async function createOrder(req, res) {
       paymentType,
     } = req.body;
 
-    // Find an available shipper
     const availableShipper = await Shipper.findOne({ shipperStatus: 'available' });
 
     if (!availableShipper) {
       return res.status(400).json({ message: 'No available shippers found' });
     }
 
-    // Create a new order
     const newOrder = new Order({
       orderDate: Date.now(),
       orderStatus: 'Pending',
@@ -41,10 +36,8 @@ async function createOrder(req, res) {
       paymentStatus: 'Pending',
     });
 
-    // Save the order
     const savedOrder = await newOrder.save();
 
-    // Update the shipper's status to 'booked'
     availableShipper.shipperStatus = 'booked';
     await availableShipper.save();
 
@@ -55,47 +48,23 @@ async function createOrder(req, res) {
   }
 }
 
-async function updateOrderStatus(req, res) {
+async function getOrderByStatus(req, res) {
   try {
-    console.log(req.body);
-
-    await Order.findByIdAndUpdate(
-      { orderID: req.body.orderID },
-      { orderStatus: req.body.orderStatus }
-    );
-
-    const orderupdate = await User.find({ orderID: req.body.orderID });
-
-    if (!orderupdate) {
-      res.send("no order found");
-    } else {
-      res.send(orderupdate);
+    const { status, id } = req.params;
+    const order = await Order.find({ orderStatus: status, user: id });
+    
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
     }
-  } catch (error) {
-    res.status(400).send(error);
-  }
-}
-
-async function getAllOrders(req, res) {
-  try {
-    const x = await Order.find({});
-
-    if (!x) {
-      res.send("no order found");
-    } else {
-      res.send({
-        message: "successfully fetched data",
-        data: { x },
-      });
-    }
+    
+    res.status(200).json({ order });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({ message: 'Internal server error' });
   }
 }
 
 module.exports = {
   createOrder,
-  updateOrderStatus,
-  getAllOrders,
+  getOrderByStatus
 };

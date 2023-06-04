@@ -12,6 +12,8 @@ router.get("/getAllUsers", auth.authenticateToken, userController.getAllUsers);
 router.delete("/delete_user", auth.authenticateToken, userController.deleteUser);
 // shipper routes
 router.post("/addShipper", shipperController.addShipper); //authorization required
-//product routes
+// order routes
+router.get("/get-orders",orderController.getAllOrders);
+router.patch("/update-order-status",orderController.updateOrderStatus);
 
 module.exports = router;
