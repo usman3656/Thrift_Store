@@ -9,6 +9,7 @@ const productSchema = new Schema({
     productCategory:{type: String,required: true,enum: ['Clothing', 'Motors', 'Accessories','Electronics']},
     availableQuantity:{type: Number,required: true,default:1},
     sellerID: {type: mongoose.Types.ObjectId,required:true,ref:"User"},
+    productStatus: {type:String,reuired:true,enum:['Sold','Listed']},
     createdAt:{type:Date, default:Date.now},
     numOfReviews:{type:Number,default:0},
     reviews:[

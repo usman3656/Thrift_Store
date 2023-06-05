@@ -14,8 +14,8 @@ const addProduct = async (req,res,next) =>{
 
 const updateProduct = async (req,res) =>{
     try {
-        const {productID,productName,productDescription, productPrice,productImage,productCategory,availableQuantity}=req.body;
-        const updatedProduct=await Product.findOneAndUpdate({_id:productID},{productName,productDescription,productPrice,productImage,productCategory,availableQuantity});
+        const {productID,productName,productDescription, productPrice,productImage,productCategory,availableQuantity,productStatus}=req.body;
+        const updatedProduct=await Product.findOneAndUpdate({_id:productID},{productName,productDescription,productPrice,productImage,productCategory,availableQuantity,productStatus});
         res.send({"message":"update successful",updatedProduct});
     } catch (error) {
         console.log(error)

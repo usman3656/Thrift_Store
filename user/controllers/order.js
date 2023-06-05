@@ -1,6 +1,7 @@
 require("dotenv").config();
 const Order = require("../../models/Order");
 const Shipper = require("../../models/Shipper");
+const Product = require("../../models/Product");
 
 async function createOrder(req, res) {
   try {
@@ -37,6 +38,16 @@ async function createOrder(req, res) {
     });
 
     const savedOrder = await newOrder.save();
+
+    for (const item of orderItems) {
+      const updatedProduct = await Product.findOneAndUpdate(
+        { _id: item.productID },
+        { productStatus: 'Sold' }
+      );
+      if (!updatedProduct) {
+        throw new Error(`Failed to update product with ID: ${item.productID}`);
+      }
+    }
 
     availableShipper.shipperStatus = 'booked';
     await availableShipper.save();

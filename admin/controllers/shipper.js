@@ -28,11 +28,29 @@ const addShipper =async (req,res) => {
         }
 };
 
+const getShippers=async (req,res) =>{
+  try {
+    const shippers = await Shipper.find();
+    if (!shippers) {
+      res.send("no shipper found");
+    } else {
+      res.send({
+        message: "successfully fetched data",
+        data: { shippers },
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
+
 const removeShipper =async (req,res) => {
 
 };
 
 module.exports = {
     addShipper,
-    removeShipper
+    removeShipper,
+    getShippers
 };
