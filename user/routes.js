@@ -25,6 +25,7 @@ router.get("/get-products", productController.getProducts);
 router.get("/get-products/:id",productController.getProductById);
 router.get("/get-productbycateg/:productCategory", productController.getByCateg);
 router.get("/get-productbyseller/:sellerID",productController.getBySellerID);
+router.get("/search",productController.searchProduct);
 //order routes
 router.post("/create-order", orderController.createOrder); //authorization required
 router.get("/get-order-status/:status/:id",orderController.getOrderByStatus);

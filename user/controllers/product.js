@@ -87,6 +87,23 @@ const getBySellerID=async(req,res)=>{
     }
 }
 
+const searchProduct=async(req,res)=>{
+    try {
+        const { query } = req.query;
+        const product = await Product.find({
+          $or: [
+            { productName: { $regex: query, $options: 'i' } },
+            { productDescription: { $regex: query, $options: 'i' } }
+          ]
+        });
+    
+        res.json({ product });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+}
+
 module.exports = {
     addProduct,
     updateProduct,
@@ -94,5 +111,6 @@ module.exports = {
     getProducts,
     getByCateg,
     getProductById,
-    getBySellerID
+    getBySellerID,
+    searchProduct
 };
