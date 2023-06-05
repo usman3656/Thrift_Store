@@ -45,6 +45,17 @@ const getShippers=async (req,res) =>{
   }
 }
 
+const updateStatus=async (req,res)=>{
+  try{
+    const {shipperID,shipperStatus}=req.body;
+        const shipperupdate = await Shipper.findOneAndUpdate({_id:shipperID},{shipperStatus:shipperStatus},{ new: true }      
+      );      
+        res.send(shipperupdate); 
+  } catch(error){
+    res.status(400).send(error);
+  }
+}
+
 const removeShipper =async (req,res) => {
 
 };
@@ -52,5 +63,6 @@ const removeShipper =async (req,res) => {
 module.exports = {
     addShipper,
     removeShipper,
-    getShippers
+    getShippers,
+    updateStatus
 };

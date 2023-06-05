@@ -1,5 +1,7 @@
 require("dotenv").config();
 const User = require("../../models/User");
+const Product=require("../../models/Product");
+const Order=require("../../models/Order");
 // const Cart = require("../../models/Cart");
 const jwt = require("jsonwebtoken");
 
@@ -46,9 +48,27 @@ async function deleteUser(req, res) {
   try {
     const user = await User.deleteOne({ username: req.body.username });
     res.send(user);
-    cookies.set("testtoken", { maxAge: 0 });
   } catch (error) {
     res.status(500).send(error);
+  }
+}
+
+async function getData(req,res) {
+  try {
+    const totalProducts = await Product.countDocuments();
+    const soldProducts = await Product.countDocuments({ productStatus: 'Sold' });
+    const totalUsers = await User.countDocuments();
+    const totalOrders = await Order.countDocuments();
+
+    res.json({
+      totalProducts,
+      soldProducts,
+      totalUsers,
+      totalOrders
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Something went wrong' });
   }
 }
 
@@ -56,4 +76,5 @@ module.exports = {
   getUser,
   getAllUsers,
   deleteUser,
+  getData
 };

@@ -28,7 +28,43 @@ async function updateOrderStatus(req, res) {
     }
   }
 
+  async function getSalesData(req,res){
+    try {
+      const salesData = await Order.aggregate([
+        {
+          $project: {
+            month: { $month: '$orderDate' },
+            sales: { $multiply: [1, { $size: '$orderItems' }] }
+          }
+        },
+        {
+          $group: {
+            _id: '$month',
+            sales: { $sum: '$sales' }
+          }
+        },
+        {
+          $sort: { _id: 1 }
+        }
+      ]);
+  
+      const monthlySalesData = Array.from({ length: 12 }, (_, i) => {
+        const monthNumber = i + 1;
+        const monthName = new Date(0, monthNumber - 1).toLocaleString('default', { month: 'short' });
+        const sales = salesData.find(item => item._id === monthNumber)?.sales || 0;
+  
+        return { name: monthName, Sales: sales };
+      });
+  
+      res.json(monthlySalesData);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Something went wrong' });
+    }
+  }
+
   module.exports = {
     updateOrderStatus,
     getAllOrders,
+    getSalesData
   };

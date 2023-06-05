@@ -9,12 +9,17 @@ const router = express.Router();
 
 router.get("/get-user", userController.getUser);
 router.get("/getAllUsers", userController.getAllUsers);
-router.delete("/delete_user", auth.authenticateToken, userController.deleteUser);
+router.delete("/delete_user", userController.deleteUser);
 // shipper routes
 router.post("/addShipper", shipperController.addShipper); //authorization required
 router.get("/getShippers",shipperController.getShippers);
+router.patch("/update-shipper-status",shipperController.updateStatus);
 // order routes
 router.get("/get-orders",orderController.getAllOrders);
 router.patch("/update-order-status",orderController.updateOrderStatus);
+//stats
+router.get("/statistics",userController.getData);
+router.get("/sales",orderController.getSalesData);
+router.get("/productStats",productController.getProdData);
 
 module.exports = router;
