@@ -4,6 +4,7 @@ const productController = require("./controllers/product");
 const orderController = require("./controllers/order");
 const shipperController = require("../admin/controllers/shipper");
 const auth = require("../auth/authorization");
+const upload=require("../middleware/multer");
 
 const router = express.Router();
 
@@ -18,8 +19,8 @@ router.put("/update_user", userController.updateUser);
 router.patch("/update-user-profile",userController.updateUserProfile)
 router.post("/refresh-token", auth.resetAccessToken);
 //product routes
-router.post("/add-product", productController.addProduct); //authentication needs to be added [removed for testing purposes]
-router.patch("/update-product", productController.updateProduct);
+router.post("/add-product",upload.array("image"), productController.addProduct); //authentication needs to be added [removed for testing purposes]
+router.patch("/update-product",auth.authenticateToken, productController.updateProduct);
 router.delete("/delete-product", productController.deleteProduct);
 router.get("/get-products", productController.getProducts);
 router.get("/get-products/:id",productController.getProductById);

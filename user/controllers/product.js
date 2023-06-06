@@ -1,9 +1,27 @@
 require('dotenv').config();
+const cloudinary=require('../../utils/cloudinary');
 const Product = require("../../models/Product");
 
 const addProduct = async (req,res,next) =>{
     try {        
-    const product=await Product.create(req.body);
+        // const result = await cloudinary.uploader.upload(req.file.path);
+        console.log(req.files);
+        const results = await Promise.all(
+            req.files.map((file) => cloudinary.uploader.upload(file.path))
+          );
+        const imageUrls = results.map((result) => result.secure_url);
+        const productData = {
+            productName: req.body.productName,
+            productDescription: req.body.productDescription,
+            productPrice: req.body.productPrice,
+            productCategory: req.body.productCategory,
+            availableQuantity: req.body.availableQuantity,
+            sellerID: req.body.sellerID,
+            productStatus: req.body.productStatus,
+            productImage: imageUrls
+          };
+
+          const product = await Product.create(productData);
 
     res.status(200).send({"message":"product added!",success:true,product});
     
