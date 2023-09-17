@@ -10,9 +10,7 @@ const corsOptions = require("./config/corsOptions");
 require("dotenv").config();
 const PORT = process.env.PORT;
 
-
-//const url = `mongodb+srv://usman120ghani:${process.env.dbPASS}@webdev.gohnvuy.mongodb.net/WebDev`;
-const url = `mongodb+srv://nawal:${process.env.dbPass}@cluster0.u26mkpt.mongodb.net/?retryWrites=true&w=majority`;
+const url = `mongodb+srv://nawal:${process.env.dbPass}@cluster0.u26mkpt.mongodb.net/`
 
 app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: true }));
