@@ -10,7 +10,7 @@ const corsOptions = require("./config/corsOptions");
 require("dotenv").config();
 const PORT = process.env.PORT;
 
-const url = `mongodb+srv://nawal:${process.env.dbPass}@cluster0.u26mkpt.mongodb.net/`
+const url = process.env.mongoURL;
 
 app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -18,8 +18,6 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use("/user", Router);
 app.use("/admin", Routeradmin);
-
-console.log("index.js");
 
 mongoose.set("strictQuery", true);
 mongoose

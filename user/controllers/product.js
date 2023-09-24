@@ -4,8 +4,6 @@ const Product = require("../../models/Product");
 
 const addProduct = async (req,res,next) =>{
     try {        
-        // const result = await cloudinary.uploader.upload(req.file.path);
-        console.log(req.files);
         const results = await Promise.all(
             req.files.map((file) => cloudinary.uploader.upload(file.path))
           );

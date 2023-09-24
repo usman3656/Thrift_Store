@@ -5,7 +5,6 @@ async function authenticateToken(req, res, next) {
   try {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
-    console.log(token);
 
     if (!token) {
       return res.sendStatus(401);
@@ -14,7 +13,6 @@ async function authenticateToken(req, res, next) {
       if (!data) {
         return res.sendStatus(401);
       } else {
-        console.log(data);
         return next();
       }
     }
@@ -28,9 +26,6 @@ async function refreshToken(req, res) {}
 
 async function resetAccessToken(req, res) {
   try {
-    // console.log(req.cookies);
-    // const { refreshToken } = req.cookies;
-    // console.log(refreshToken);
 
     if (!refreshToken) {
       res.send("Invalid Refresh token or Token expired");

@@ -7,7 +7,6 @@ const addShipper =async (req,res) => {
         const {shipperName,
             shipperPhone,
             shipperStatus} = req.body;
-        console.log(req.body);
     
         const newShipper = await Shipper.findOne({shipperPhone});
         if(!newShipper){

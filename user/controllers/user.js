@@ -7,7 +7,6 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 async function forgotPassword(req, res) {
   try {
-    console.log("we are in forgot password");
     const data = req.body.data;
     console.log(req.body.data);
     let token = req.body.token;
@@ -15,13 +14,8 @@ async function forgotPassword(req, res) {
 
     if (!user) {
       res.status(400).send("user does not exist!");
-      console.log("user does not exist");
-    } else {
-      console.log(user);
-
+    } else {      
       const email = data.username;
-      console.log(email);
-      console.log(token);
 
       const msg = {
         to: email, // Change to your recipient
@@ -35,7 +29,6 @@ async function forgotPassword(req, res) {
       sgMail
         .send(msg)
         .then(() => {
-          console.log("Email sent");
           res.status(200).send("email sent");
         })
         .catch((error) => {
@@ -50,23 +43,16 @@ async function forgotPassword(req, res) {
 }
 async function verifyPassword(req, res) {
   try {
-    console.log("we are in verify password");
     const data = req.body;
     let user, tok;
-    console.log(data);
 
     const authHeader = req.headers["authorization"];
-    console.log("authorization");
-    console.log(req.headers);
     const token = authHeader && authHeader.split(" ")[1];
-    console.log(token);
 
     try {
       user = jwt.verify(data.token, process.env.ACCESS_TOKEN_SECRET);
-
       tok = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, { complete: true });
 
-      console.log(user, tok);
     } catch (err) {
       console.error(err);
     }
@@ -80,9 +66,7 @@ async function verifyPassword(req, res) {
 
 async function registerloginUser(req, res) {
   try {
-    console.log("we are in registerlogin");
-    const data = req.body.data;
-    console.log(data);
+    const data = req.body;
 
     const newUser = await User.findOne({ username: data.username });
     if (!newUser) {
@@ -106,8 +90,6 @@ async function registerloginUser(req, res) {
         expiresIn: "8hr",
       });
 
-      console.log("user created successfully");
-
       res.status(200).send({
         message: "user created successfully",
         data: data,
@@ -125,8 +107,7 @@ async function registerloginUser(req, res) {
 
 async function getProfile(req, res) {
   try {
-    console.log("get function");
-    const username = req.user.username;
+    const username = req.body.username;
 
     let user;
     if (username) {
@@ -163,12 +144,9 @@ async function getByID(req,res){
 }
 
 async function updateUser(req, res) {
-  console.log("we are updating user");
   try {
     const username = req.body.emaily;
     const password = req.body.password.password;
-
-    console.log(username, password);
 
     await User.findOneAndUpdate(
       { username: username },
@@ -178,13 +156,10 @@ async function updateUser(req, res) {
         lastName: req.body.lastName,
         phone: req.body.phone,
         address: req.body.address,
-        // role: req.body.role,
         country: req.body.country,
         city: req.body.city,
       }
     );
-
-    console.log("user updated");
 
     const user = await User.find({ username: username });
     res.status(200).send("user updated");
@@ -205,24 +180,19 @@ async function updateUserProfile(req,res){
 
 async function login(req, res) {
   try {
-    console.log("we are in login");
     const { username, password } = req.body;
-    console.log(req.body);
     const user = await User.findOne({ username });
 
     if (!user) {
       res.status(400).send({ message: "user does not exist!" });
-      console.log("user does not exist");
     } else {
-      //const matchPass=await bcrypt.compare(password,user.password);
 
       if (!(password == user.password)) {
         res.status(401).send({ message: "invalid password" });
-        console.log("Invalid");
       } else {
-        const token = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
-          expiresIn: "1hr",
-        });
+          const token = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
+            expiresIn: "1hr",
+          });
 
         const refToken = jwt.sign({ user }, process.env.REFRESH_TOKEN_SECRET, {
           expiresIn: "8hr",
@@ -233,7 +203,6 @@ async function login(req, res) {
           data: user,
           token,
         });
-        console.log("user logged in succesfully");
       }
     }
   } catch (error) {

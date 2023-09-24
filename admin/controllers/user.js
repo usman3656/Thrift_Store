@@ -2,15 +2,11 @@ require("dotenv").config();
 const User = require("../../models/User");
 const Product=require("../../models/Product");
 const Order=require("../../models/Order");
-// const Cart = require("../../models/Cart");
 const jwt = require("jsonwebtoken");
 
 async function getUser(req, res) {
   try {
-    console.log("get function");
     const { username, firstName, lastName } = req.query;
-    console.log(req.params);
-    console.log("get function");
 
     let user;
     if (username) {
