@@ -1,0 +1,99 @@
+.sellerForm-label{
+width: 200px;
+}
+.sellerForm-input{
+  width: 350px;
+}
+.sellerForm-inputwithText{
+  width: 304px;
+}
+
+input[type=file]::file-selector-button {
+  background-color: #02471350;
+  content: 'Add your files' !important;
+}
+
+.cart-img{
+  height: 70px;
+  width: 70px;
+}
+
+.bg-dark-side{
+  background-color: #014d43 !important;
+}
+
+.dropdown-toggle::after{
+  display: none;
+}
+
+.bg-light{
+  background-color: #eeeeee34 !important;
+}
+
+a{
+  text-decoration: none;
+}
+
+.categories{
+  width: 18rem;
+  height: 10rem;
+}
+.products{
+  width: 30rem;
+  height:7rem
+}
+.products img{
+  height:90px;
+  width:130px;
+}
+
+.carousel-img{
+  height: 300px; 
+  object-fit: contain;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: invert(100%);
+}
+
+
+
+.App {
+  /* text-align: center; */
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
