@@ -11,6 +11,13 @@ require("dotenv").config();
 const PORT = process.env.PORT;
 console.log(PORT);
 
+// Making Build Folder as Public
+app.use(express.static(path.join(__dirname, "build")));
+
+app.get("/", function (req, res) {
+	res.sendFile(path.join(__dirname, "build", "index.html"));
+});
+
 const url = process.env.mongoURL;
 console.log(url);
 
