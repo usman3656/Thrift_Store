@@ -11,6 +11,7 @@ require("dotenv").config();
 const PORT = process.env.PORT;
 
 const url = process.env.mongoURL;
+console.log(url);
 
 app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -21,12 +22,12 @@ app.use("/admin", Routeradmin);
 
 mongoose.set("strictQuery", true);
 mongoose
-  .connect(url)
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server running on port: http://localhost:${PORT}`);
-    });
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+	.connect(url)
+	.then(() => {
+		app.listen(PORT, () => {
+			console.log(`Server running on port: http://localhost:${PORT}`);
+		});
+	})
+	.catch((error) => {
+		console.log(error);
+	});
