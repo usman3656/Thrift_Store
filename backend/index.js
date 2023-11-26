@@ -9,6 +9,7 @@ const app = express();
 const corsOptions = require("./config/corsOptions");
 require("dotenv").config();
 const PORT = process.env.PORT;
+console.log(PORT);
 
 const url = process.env.mongoURL;
 console.log(url);
